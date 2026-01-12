@@ -1,0 +1,243 @@
+/* Schopenhauer Theme - Burgundy/Wine Color Scheme */
+
+:root {
+  /* Primary colors - Burgundy */
+  --md-primary-fg-color: #722F37;
+  --md-primary-fg-color--light: #A64D57;
+  --md-primary-fg-color--dark: #4A1C23;
+
+  /* Accent colors - Gold */
+  --md-accent-fg-color: #D4A574;
+  --md-accent-fg-color--transparent: #D4A57420;
+
+  /* Custom brand colors */
+  --schopenhauer-burgundy: #722F37;
+  --schopenhauer-burgundy-dark: #4A1C23;
+  --schopenhauer-burgundy-light: #A64D57;
+  --schopenhauer-gold: #D4A574;
+  --schopenhauer-gold-light: #E8C9A0;
+  --schopenhauer-slate: #2C3E50;
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #A64D57;
+  --md-primary-fg-color--light: #C96E78;
+  --md-primary-fg-color--dark: #722F37;
+  --md-accent-fg-color: #E8C9A0;
+}
+
+/* Header styling */
+.md-header {
+  background-color: var(--schopenhauer-burgundy-dark);
+}
+
+.md-header__button.md-logo {
+  margin: 0.2rem;
+  padding: 0.2rem;
+}
+
+/* Navigation tabs */
+.md-tabs {
+  background-color: var(--schopenhauer-burgundy);
+}
+
+/* Hero section styling */
+.md-typeset .md-content__inner > h1:first-child {
+  color: var(--schopenhauer-burgundy-dark);
+  font-weight: 700;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-content__inner > h1:first-child {
+  color: var(--schopenhauer-burgundy-light);
+}
+
+/* Code blocks */
+.md-typeset code {
+  background-color: #F5F0EE;
+  border-radius: 4px;
+}
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background-color: #2D2525;
+}
+
+/* Admonitions with brand colors */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: var(--schopenhauer-burgundy);
+}
+
+.md-typeset .note > .admonition-title,
+.md-typeset .note > summary {
+  background-color: var(--schopenhauer-burgundy-light);
+}
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: var(--schopenhauer-gold);
+}
+
+.md-typeset .tip > .admonition-title,
+.md-typeset .tip > summary {
+  background-color: var(--schopenhauer-gold);
+  color: #333;
+}
+
+/* Button styling */
+.md-typeset .md-button {
+  border-color: var(--schopenhauer-burgundy);
+  color: var(--schopenhauer-burgundy);
+}
+
+.md-typeset .md-button:hover {
+  background-color: var(--schopenhauer-burgundy);
+  border-color: var(--schopenhauer-burgundy);
+  color: white;
+}
+
+.md-typeset .md-button--primary {
+  background-color: var(--schopenhauer-burgundy);
+  border-color: var(--schopenhauer-burgundy);
+  color: white;
+}
+
+.md-typeset .md-button--primary:hover {
+  background-color: var(--schopenhauer-burgundy-dark);
+  border-color: var(--schopenhauer-burgundy-dark);
+}
+
+/* Table styling */
+.md-typeset table:not([class]) th {
+  background-color: var(--schopenhauer-burgundy);
+  color: white;
+}
+
+/* Footer */
+.md-footer {
+  background-color: var(--schopenhauer-slate);
+}
+
+/* Search highlight */
+.md-search__form {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Sidebar active item */
+.md-nav__link--active {
+  color: var(--schopenhauer-burgundy) !important;
+  font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: var(--schopenhauer-burgundy-light) !important;
+}
+
+/* Custom hero banner */
+.hero-banner {
+  background: linear-gradient(135deg, var(--schopenhauer-burgundy-dark) 0%, var(--schopenhauer-burgundy) 100%);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.hero-banner h1 {
+  color: white !important;
+  margin-bottom: 1rem;
+}
+
+.hero-banner p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+}
+
+/* Feature cards */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+  color: var(--schopenhauer-burgundy);
+  margin-top: 0;
+}
+
+[data-md-color-scheme="slate"] .feature-card h3 {
+  color: var(--schopenhauer-burgundy-light);
+}
+
+/* Terminal/CLI output styling */
+.cli-output {
+  background: #1E1E1E;
+  color: #D4D4D4;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Roboto Mono', monospace;
+  overflow-x: auto;
+}
+
+.cli-output .prompt {
+  color: var(--schopenhauer-gold);
+}
+
+.cli-output .command {
+  color: #569CD6;
+}
+
+.cli-output .output {
+  color: #6A9955;
+}
+
+/* Version badge */
+.version-badge {
+  display: inline-block;
+  background: var(--schopenhauer-burgundy);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Quick links */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.quick-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--schopenhauer-burgundy);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--schopenhauer-burgundy);
+  transition: all 0.2s;
+}
+
+.quick-links a:hover {
+  background: var(--schopenhauer-burgundy);
+  color: white;
+}
