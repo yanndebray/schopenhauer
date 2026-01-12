@@ -12,12 +12,12 @@
 <p align="center">
   <a href="https://pypi.org/project/schopenhauer/"><img src="https://img.shields.io/pypi/v/schopenhauer.svg?style=flat-square&color=722F37" alt="PyPI"></a>
   <a href="https://pypi.org/project/schopenhauer/"><img src="https://img.shields.io/pypi/pyversions/schopenhauer.svg?style=flat-square" alt="Python Versions"></a>
-  <a href="https://github.com/schopenhauer/schopenhauer/blob/main/LICENSE"><img src="https://img.shields.io/github/license/schopenhauer/schopenhauer.svg?style=flat-square" alt="License"></a>
-  <a href="https://github.com/schopenhauer/schopenhauer/actions"><img src="https://img.shields.io/github/actions/workflow/status/schopenhauer/schopenhauer/test.yml?style=flat-square" alt="Build Status"></a>
+  <a href="https://github.com/yanndebray/schopenhauer/blob/main/LICENSE"><img src="https://img.shields.io/github/license/schopenhauer/schopenhauer.svg?style=flat-square" alt="License"></a>
+  <a href="https://github.com/yanndebray/schopenhauer/actions"><img src="https://img.shields.io/github/actions/workflow/status/schopenhauer/schopenhauer/test.yml?style=flat-square" alt="Build Status"></a>
 </p>
 
 <p align="center">
-  <a href="https://schopenhauer.github.io/schopenhauer">Documentation</a> •
+  <a href="https://yanndebray.github.io/schopenhauer">Documentation</a> •
   <a href="#installation">Installation</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#features">Features</a> •
