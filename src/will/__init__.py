@@ -16,7 +16,7 @@ CLI Usage:
     $ will generate spec.yaml -o report.docx
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Schopenhauer Contributors"
 
 from will.core import WordDocument

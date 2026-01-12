@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "schopenhauer"
-version = "0.1.0"
+version = "0.1.1"
 description = "A powerful CLI tool for generating Word documents from YAML/JSON specifications"
 readme = "README.md"
 license = {text = "MIT"}
