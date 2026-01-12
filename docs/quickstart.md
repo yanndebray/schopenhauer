@@ -325,4 +325,3 @@ for client in clients:
 - [YAML Format Reference](yaml-format.md) - Complete specification format
 - [CLI Commands](commands/index.md) - All available commands
 - [Python API](api.md) - Full API documentation
-- [Cookbook](cookbook.md) - Common recipes and examples

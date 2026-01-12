@@ -135,4 +135,4 @@ Generated document: report.docx
 
 - [YAML Format Reference](../yaml-format.md) - Complete specification format
 - [will create](create.md) - Simple document creation
-- [will replace](replace.md) - Replace placeholders
+- `will replace` - Replace placeholders

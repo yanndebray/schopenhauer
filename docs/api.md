@@ -42,7 +42,7 @@ doc = WordDocument(
 )
 ```
 
-[Full WordDocument Reference](api/word-document.md)
+<!-- Full API reference available in docstrings -->
 
 ### DocumentBuilder
 
@@ -60,7 +60,7 @@ builder = DocumentBuilder()
     .save("report.docx"))
 ```
 
-[Full DocumentBuilder Reference](api/document-builder.md)
+<!-- Full API reference available in docstrings -->
 
 ## Common Operations
 
@@ -297,7 +297,7 @@ print(FONTS.HEADING_1.family)  # 'Cambria'
 print(FONTS.BODY.size)         # 11 (points)
 ```
 
-[Full Styles Reference](api/styles.md)
+<!-- See will/styles.py for full reference -->
 
 ## Templates
 
@@ -314,7 +314,7 @@ print(template.page_size)   # 'letter'
 print(template.margins)     # 'moderate'
 ```
 
-[Full Templates Reference](api/templates.md)
+<!-- See will/templates.py for full reference -->
 
 ## Best Practices
 

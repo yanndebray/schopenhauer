@@ -21,12 +21,12 @@ will [OPTIONS] COMMAND [ARGS]...
 |---------|-------------|
 | [`create`](create.md) | Create a new Word document |
 | [`generate`](generate.md) | Generate document from YAML/JSON spec |
-| [`inspect`](inspect.md) | Inspect document or template |
-| [`new`](new.md) | Interactive document creation |
-| [`add`](add.md) | Add content to existing document |
-| [`replace`](replace.md) | Replace placeholders in document |
-| [`template`](template.md) | Template management commands |
-| [`cloud`](cloud.md) | Cloud API commands |
+| `inspect` | Inspect document or template |
+| `new` | Interactive document creation |
+| `add` | Add content to existing document |
+| `replace` | Replace placeholders in document |
+| `template` | Template management commands |
+| `cloud` | Cloud API commands |
 
 ## Quick Reference
 

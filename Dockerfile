@@ -4,7 +4,7 @@
 # ==============================================================================
 # Stage 1: Build stage
 # ==============================================================================
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
@@ -25,11 +25,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # ==============================================================================
 # Stage 2: Production stage
 # ==============================================================================
-FROM python:3.11-slim as production
+FROM python:3.11-slim AS production
 
 LABEL maintainer="Schopenhauer Contributors"
 LABEL description="Schopenhauer's Will - Word Document Generator API"
-LABEL version="0.1.0"
+LABEL version="0.1.1"
 
 # Security: Run as non-root user
 RUN groupadd -r schopenhauer && useradd -r -g schopenhauer schopenhauer
@@ -72,7 +72,7 @@ CMD ["sh", "-c", "uvicorn will.api:app --host 0.0.0.0 --port ${PORT}"]
 # ==============================================================================
 # Stage 3: Development stage (optional)
 # ==============================================================================
-FROM production as development
+FROM production AS development
 
 USER root
 

@@ -90,5 +90,5 @@ Margins         moderate
 ## See Also
 
 - [will generate](generate.md) - Generate from YAML/JSON spec
-- [will new](new.md) - Interactive document creation
-- [will template](template.md) - Template management
+- `will new` - Interactive document creation
+- `will template` - Template management
