@@ -87,7 +87,7 @@ class WordDocument:
     def _setup_default_styles(self):
         """Configure default styles for the document."""
         # Set default font for normal style
-        style = self.doc.styles['Normal']
+        style = self.doc.styles["Normal"]
         font = style.font
         font.name = FONTS.BODY.family
         font.size = FONTS.BODY.size_pt
@@ -538,7 +538,7 @@ class WordDocument:
         pBdr = parse_xml(
             f'<w:pBdr {nsdecls("w")}>'
             f'<w:bottom w:val="single" w:sz="6" w:space="1" w:color="{Colors.GRAY_400.value}"/>'
-            f'</w:pBdr>'
+            f"</w:pBdr>"
         )
         para._p.get_or_add_pPr().append(pBdr)
         return para
@@ -841,8 +841,9 @@ class WordDocument:
             List of placeholder names found.
         """
         import re
+
         placeholders = set()
-        pattern = r'\{\{([^}]+)\}\}'
+        pattern = r"\{\{([^}]+)\}\}"
 
         # Check paragraphs
         for para in self.doc.paragraphs:
@@ -882,8 +883,12 @@ class WordDocument:
         info = {
             "title": self.doc.core_properties.title or "",
             "author": self.doc.core_properties.author or "",
-            "created": str(self.doc.core_properties.created) if self.doc.core_properties.created else "",
-            "modified": str(self.doc.core_properties.modified) if self.doc.core_properties.modified else "",
+            "created": (
+                str(self.doc.core_properties.created) if self.doc.core_properties.created else ""
+            ),
+            "modified": (
+                str(self.doc.core_properties.modified) if self.doc.core_properties.modified else ""
+            ),
             "paragraphs": len(self.doc.paragraphs),
             "tables": len(self.doc.tables),
             "sections": len(self.doc.sections),
@@ -942,7 +947,7 @@ class WordDocument:
         """
         import yaml
 
-        with open(yaml_path, encoding='utf-8') as f:
+        with open(yaml_path, encoding="utf-8") as f:
             spec = yaml.safe_load(f)
 
         doc = cls.from_spec(spec)
@@ -966,7 +971,7 @@ class WordDocument:
         """
         import json
 
-        with open(json_path, encoding='utf-8') as f:
+        with open(json_path, encoding="utf-8") as f:
             spec = json.load(f)
 
         doc = cls.from_spec(spec)

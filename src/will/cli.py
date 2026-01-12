@@ -46,8 +46,9 @@ console = Console(force_terminal=True, safe_box=True, legacy_windows=True)
 # CLI GROUP
 # =============================================================================
 
+
 @click.group(invoke_without_command=True)
-@click.option('--version', '-v', is_flag=True, help='Show version and exit.')
+@click.option("--version", "-v", is_flag=True, help="Show version and exit.")
 @click.pass_context
 def main(ctx, version):
     """
@@ -65,7 +66,9 @@ def main(ctx, version):
     """
     if version:
         console.print(f"[bold]Schopenhauer's Will[/bold] version [cyan]{__version__}[/cyan]")
-        console.print(f"Primary color: [bold #{BRAND['primary']}]Burgundy[/bold #{BRAND['primary']}]")
+        console.print(
+            f"Primary color: [bold #{BRAND['primary']}]Burgundy[/bold #{BRAND['primary']}]"
+        )
         ctx.exit()
 
     if ctx.invoked_subcommand is None:
@@ -76,17 +79,30 @@ def main(ctx, version):
 # CREATE COMMAND
 # =============================================================================
 
+
 @main.command()
-@click.option('--output', '-o', required=True, help='Output file path (.docx)')
-@click.option('--title', '-t', help='Document title')
-@click.option('--subtitle', '-s', help='Document subtitle')
-@click.option('--author', '-a', help='Document author')
-@click.option('--template', help='Template file (.docx) or built-in template name')
-@click.option('--page-size', type=click.Choice(['letter', 'legal', 'a4', 'a5']), default='letter', help='Page size')
-@click.option('--margins', type=click.Choice(['normal', 'narrow', 'moderate', 'wide']), default='normal', help='Page margins')
-@click.option('--header', help='Header text')
-@click.option('--footer', help='Footer text')
-@click.option('--page-numbers/--no-page-numbers', default=True, help='Include page numbers in footer')
+@click.option("--output", "-o", required=True, help="Output file path (.docx)")
+@click.option("--title", "-t", help="Document title")
+@click.option("--subtitle", "-s", help="Document subtitle")
+@click.option("--author", "-a", help="Document author")
+@click.option("--template", help="Template file (.docx) or built-in template name")
+@click.option(
+    "--page-size",
+    type=click.Choice(["letter", "legal", "a4", "a5"]),
+    default="letter",
+    help="Page size",
+)
+@click.option(
+    "--margins",
+    type=click.Choice(["normal", "narrow", "moderate", "wide"]),
+    default="normal",
+    help="Page margins",
+)
+@click.option("--header", help="Header text")
+@click.option("--footer", help="Footer text")
+@click.option(
+    "--page-numbers/--no-page-numbers", default=True, help="Include page numbers in footer"
+)
 def create(
     output: str,
     title: Optional[str],
@@ -115,7 +131,9 @@ def create(
             if Path(template).exists():
                 template_path = template
             elif template not in get_template_names():
-                console.print(f"[yellow]Warning: Template '{template}' not found, using default[/yellow]")
+                console.print(
+                    f"[yellow]Warning: Template '{template}' not found, using default[/yellow]"
+                )
 
         doc = WordDocument(template=template_path, title=title, author=author)
 
@@ -126,6 +144,7 @@ def create(
         # Apply built-in template if specified
         if template and template in get_template_names():
             from will.templates import apply_template
+
             apply_template(doc, template)
 
         # Add title
@@ -149,8 +168,8 @@ def create(
         table = Table(show_header=False, box=None)
         table.add_column("Property", style="dim")
         table.add_column("Value")
-        table.add_row("Title", info['title'] or "(none)")
-        table.add_row("Author", info['author'] or "(none)")
+        table.add_row("Title", info["title"] or "(none)")
+        table.add_row("Author", info["author"] or "(none)")
         table.add_row("Page Size", page_size)
         table.add_row("Margins", margins)
         console.print(table)
@@ -164,11 +183,12 @@ def create(
 # GENERATE COMMAND
 # =============================================================================
 
+
 @main.command()
-@click.argument('spec_file', type=click.Path(exists=True))
-@click.option('--output', '-o', required=True, help='Output file path (.docx)')
-@click.option('--template', '-t', help='Optional template file (.docx)')
-@click.option('--var', '-V', multiple=True, help='Variable substitution (KEY=VALUE)')
+@click.argument("spec_file", type=click.Path(exists=True))
+@click.option("--output", "-o", required=True, help="Output file path (.docx)")
+@click.option("--template", "-t", help="Optional template file (.docx)")
+@click.option("--var", "-V", multiple=True, help="Variable substitution (KEY=VALUE)")
 def generate(
     spec_file: str,
     output: str,
@@ -190,17 +210,18 @@ def generate(
         click.echo("Generating document...")
 
         # Load spec
-        if spec_path.suffix.lower() in ['.yaml', '.yml']:
+        if spec_path.suffix.lower() in [".yaml", ".yml"]:
             import yaml
-            with open(spec_path, encoding='utf-8') as f:
+
+            with open(spec_path, encoding="utf-8") as f:
                 spec = yaml.safe_load(f)
         else:
-            with open(spec_path, encoding='utf-8') as f:
+            with open(spec_path, encoding="utf-8") as f:
                 spec = json.load(f)
 
         # Apply template override
         if template:
-            spec['template'] = template
+            spec["template"] = template
 
         # Create document from spec
         doc = WordDocument.from_spec(spec)
@@ -209,8 +230,8 @@ def generate(
         if var:
             replacements = {}
             for v in var:
-                if '=' in v:
-                    key, value = v.split('=', 1)
+                if "=" in v:
+                    key, value = v.split("=", 1)
                     replacements[key] = value
             if replacements:
                 doc.replace_placeholders(replacements)
@@ -235,11 +256,12 @@ def generate(
 # INSPECT COMMAND
 # =============================================================================
 
+
 @main.command()
-@click.argument('document', type=click.Path(exists=True))
-@click.option('--json', 'as_json', is_flag=True, help='Output as JSON')
-@click.option('--placeholders', '-p', is_flag=True, help='Show only placeholders')
-@click.option('--styles', '-s', is_flag=True, help='Show available styles')
+@click.argument("document", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.option("--placeholders", "-p", is_flag=True, help="Show only placeholders")
+@click.option("--styles", "-s", is_flag=True, help="Show available styles")
 def inspect(
     document: str,
     as_json: bool,
@@ -264,9 +286,9 @@ def inspect(
             return
 
         if placeholders:
-            if info['placeholders']:
+            if info["placeholders"]:
                 console.print("[bold]Placeholders found:[/bold]")
-                for p in info['placeholders']:
+                for p in info["placeholders"]:
                     console.print(f"  {{{{[cyan]{p}[/cyan]}}}}")
             else:
                 console.print("[dim]No placeholders found[/dim]")
@@ -274,7 +296,7 @@ def inspect(
 
         if styles:
             console.print("[bold]Available styles:[/bold]")
-            for style in info['styles']:
+            for style in info["styles"]:
                 console.print(f"  {style}")
             return
 
@@ -285,20 +307,20 @@ def inspect(
         table.add_column("Property")
         table.add_column("Value")
 
-        table.add_row("Title", info['title'] or "(none)")
-        table.add_row("Author", info['author'] or "(none)")
-        table.add_row("Created", info['created'] or "(unknown)")
-        table.add_row("Modified", info['modified'] or "(unknown)")
-        table.add_row("Paragraphs", str(info['paragraphs']))
-        table.add_row("Tables", str(info['tables']))
-        table.add_row("Sections", str(info['sections']))
-        table.add_row("Word Count", str(info['word_count']))
+        table.add_row("Title", info["title"] or "(none)")
+        table.add_row("Author", info["author"] or "(none)")
+        table.add_row("Created", info["created"] or "(unknown)")
+        table.add_row("Modified", info["modified"] or "(unknown)")
+        table.add_row("Paragraphs", str(info["paragraphs"]))
+        table.add_row("Tables", str(info["tables"]))
+        table.add_row("Sections", str(info["sections"]))
+        table.add_row("Word Count", str(info["word_count"]))
 
         console.print(table)
 
-        if info['placeholders']:
+        if info["placeholders"]:
             console.print("\n[bold]Placeholders:[/bold]")
-            for p in info['placeholders']:
+            for p in info["placeholders"]:
                 console.print(f"  {{{{[cyan]{p}[/cyan]}}}}")
 
     except Exception as e:
@@ -310,9 +332,10 @@ def inspect(
 # NEW COMMAND (Interactive)
 # =============================================================================
 
+
 @main.command()
-@click.option('--output', '-o', required=True, help='Output file path (.docx)')
-@click.option('--template', '-t', help='Template to use')
+@click.option("--output", "-o", required=True, help="Output file path (.docx)")
+@click.option("--template", "-t", help="Template to use")
 def new(output: str, template: Optional[str]):
     """
     Interactively create a new document.
@@ -344,15 +367,13 @@ def new(output: str, template: Optional[str]):
                 console.print(f"  {i}. {t['name']} - {t['description']}")
 
             choice = click.prompt(
-                "\nSelect template (number or name)",
-                default="default",
-                show_default=True
+                "\nSelect template (number or name)", default="default", show_default=True
             )
 
             try:
                 idx = int(choice) - 1
                 if 0 <= idx < len(templates):
-                    template = templates[idx]['name']
+                    template = templates[idx]["name"]
             except ValueError:
                 template = choice
 
@@ -369,23 +390,23 @@ def new(output: str, template: Optional[str]):
         while True:
             content_type = click.prompt(
                 "\nContent type",
-                type=click.Choice(['heading', 'paragraph', 'bullets', 'table', 'done']),
-                default='done'
+                type=click.Choice(["heading", "paragraph", "bullets", "table", "done"]),
+                default="done",
             )
 
-            if content_type == 'done':
+            if content_type == "done":
                 break
 
-            if content_type == 'heading':
+            if content_type == "heading":
                 text = click.prompt("Heading text")
                 level = click.prompt("Level (1-5)", type=int, default=1)
                 builder.add_heading(text, level=level)
 
-            elif content_type == 'paragraph':
+            elif content_type == "paragraph":
                 text = click.prompt("Paragraph text")
                 builder.add_paragraph(text)
 
-            elif content_type == 'bullets':
+            elif content_type == "bullets":
                 console.print("Enter bullet points (empty line to finish):")
                 items = []
                 while True:
@@ -396,7 +417,7 @@ def new(output: str, template: Optional[str]):
                 if items:
                     builder.add_bullets(items)
 
-            elif content_type == 'table':
+            elif content_type == "table":
                 cols = click.prompt("Number of columns", type=int, default=2)
                 headers = []
                 console.print("Enter column headers:")
@@ -432,16 +453,17 @@ def new(output: str, template: Optional[str]):
 # ADD COMMAND
 # =============================================================================
 
+
 @main.command()
-@click.argument('document', type=click.Path(exists=True))
-@click.option('--output', '-o', help='Output file (defaults to overwrite input)')
-@click.option('--heading', '-h', help='Add a heading')
-@click.option('--level', '-l', type=int, default=1, help='Heading level (1-5)')
-@click.option('--paragraph', '-p', help='Add a paragraph')
-@click.option('--bullets', '-b', multiple=True, help='Add bullet points')
-@click.option('--page-break', is_flag=True, help='Add a page break')
-@click.option('--image', '-i', type=click.Path(exists=True), help='Add an image')
-@click.option('--caption', help='Image caption')
+@click.argument("document", type=click.Path(exists=True))
+@click.option("--output", "-o", help="Output file (defaults to overwrite input)")
+@click.option("--heading", "-h", help="Add a heading")
+@click.option("--level", "-l", type=int, default=1, help="Heading level (1-5)")
+@click.option("--paragraph", "-p", help="Add a paragraph")
+@click.option("--bullets", "-b", multiple=True, help="Add bullet points")
+@click.option("--page-break", is_flag=True, help="Add a page break")
+@click.option("--image", "-i", type=click.Path(exists=True), help="Add an image")
+@click.option("--caption", help="Image caption")
 def add(
     document: str,
     output: Optional[str],
@@ -494,11 +516,12 @@ def add(
 # REPLACE COMMAND
 # =============================================================================
 
+
 @main.command()
-@click.argument('document', type=click.Path(exists=True))
-@click.argument('replacements', nargs=-1)
-@click.option('--output', '-o', help='Output file (defaults to overwrite input)')
-@click.option('--list', '-l', 'list_only', is_flag=True, help='List placeholders only')
+@click.argument("document", type=click.Path(exists=True))
+@click.argument("replacements", nargs=-1)
+@click.option("--output", "-o", help="Output file (defaults to overwrite input)")
+@click.option("--list", "-l", "list_only", is_flag=True, help="List placeholders only")
 def replace(
     document: str,
     replacements: tuple,
@@ -535,8 +558,8 @@ def replace(
         # Parse replacements
         repl_dict = {}
         for r in replacements:
-            if '=' in r:
-                key, value = r.split('=', 1)
+            if "=" in r:
+                key, value = r.split("=", 1)
                 repl_dict[key] = value
             else:
                 console.print(f"[yellow]Skipping invalid format: {r} (use KEY=VALUE)[/yellow]")
@@ -558,6 +581,7 @@ def replace(
 # TEMPLATE COMMAND GROUP
 # =============================================================================
 
+
 @main.group()
 def template():
     """
@@ -572,8 +596,8 @@ def template():
     pass
 
 
-@template.command('list')
-@click.option('--yaml', 'yaml_templates', is_flag=True, help='List YAML templates instead')
+@template.command("list")
+@click.option("--yaml", "yaml_templates", is_flag=True, help="List YAML templates instead")
 def template_list(yaml_templates: bool):
     """List available templates."""
     if yaml_templates:
@@ -588,13 +612,13 @@ def template_list(yaml_templates: bool):
         table.add_column("Page Size")
 
         for t in list_templates():
-            table.add_row(t['name'], t['description'], t['page_size'])
+            table.add_row(t["name"], t["description"], t["page_size"])
 
         console.print(table)
 
 
-@template.command('info')
-@click.argument('name')
+@template.command("info")
+@click.argument("name")
 def template_info(name: str):
     """Show details about a template."""
     t = get_template(name)
@@ -622,9 +646,9 @@ def template_info(name: str):
     console.print(table)
 
 
-@template.command('init')
-@click.argument('name')
-@click.option('--output', '-o', required=True, help='Output YAML file path')
+@template.command("init")
+@click.argument("name")
+@click.option("--output", "-o", required=True, help="Output YAML file path")
 def template_init(name: str, output: str):
     """Create a YAML spec file from a template."""
     yaml_content = get_yaml_template(name)
@@ -645,6 +669,7 @@ def template_init(name: str, output: str):
 # CLOUD COMMAND GROUP
 # =============================================================================
 
+
 @main.group()
 def cloud():
     """
@@ -659,8 +684,8 @@ def cloud():
     pass
 
 
-@cloud.command('health')
-@click.option('--url', '-u', default='http://localhost:8000', help='API base URL')
+@cloud.command("health")
+@click.option("--url", "-u", default="http://localhost:8000", help="API base URL")
 def cloud_health(url: str):
     """Check cloud API health status."""
     try:
@@ -682,11 +707,11 @@ def cloud_health(url: str):
         sys.exit(1)
 
 
-@cloud.command('generate')
-@click.argument('spec_file', type=click.Path(exists=True))
-@click.option('--output', '-o', required=True, help='Output file path')
-@click.option('--url', '-u', default='http://localhost:8000', help='API base URL')
-@click.option('--template', '-t', type=click.Path(exists=True), help='Template file')
+@cloud.command("generate")
+@click.argument("spec_file", type=click.Path(exists=True))
+@click.option("--output", "-o", required=True, help="Output file path")
+@click.option("--url", "-u", default="http://localhost:8000", help="API base URL")
+@click.option("--template", "-t", type=click.Path(exists=True), help="Template file")
 def cloud_generate(
     spec_file: str,
     output: str,
@@ -700,11 +725,11 @@ def cloud_generate(
 
         # Load spec
         spec_path = Path(spec_file)
-        if spec_path.suffix.lower() in ['.yaml', '.yml']:
-            with open(spec_path, encoding='utf-8') as f:
+        if spec_path.suffix.lower() in [".yaml", ".yml"]:
+            with open(spec_path, encoding="utf-8") as f:
                 spec = yaml.safe_load(f)
         else:
-            with open(spec_path, encoding='utf-8') as f:
+            with open(spec_path, encoding="utf-8") as f:
                 spec = json.load(f)
 
         with Progress(
@@ -717,9 +742,9 @@ def cloud_generate(
             with httpx.Client() as client:
                 if template:
                     # Use multipart form data with template
-                    with open(template, 'rb') as f:
-                        files = {'template': f}
-                        data = {'spec': json.dumps(spec)}
+                    with open(template, "rb") as f:
+                        files = {"template": f}
+                        data = {"spec": json.dumps(spec)}
                         response = client.post(
                             f"{url}/generate-with-template",
                             files=files,
@@ -737,7 +762,7 @@ def cloud_generate(
                 response.raise_for_status()
 
             # Save response
-            with open(output, 'wb') as f:
+            with open(output, "wb") as f:
                 f.write(response.content)
 
             progress.update(task, completed=True)
@@ -749,17 +774,17 @@ def cloud_generate(
         sys.exit(1)
 
 
-@cloud.command('inspect')
-@click.argument('template', type=click.Path(exists=True))
-@click.option('--url', '-u', default='http://localhost:8000', help='API base URL')
+@cloud.command("inspect")
+@click.argument("template", type=click.Path(exists=True))
+@click.option("--url", "-u", default="http://localhost:8000", help="API base URL")
 def cloud_inspect(template: str, url: str):
     """Inspect template via cloud API."""
     try:
         import httpx
 
         with httpx.Client() as client:
-            with open(template, 'rb') as f:
-                files = {'template': f}
+            with open(template, "rb") as f:
+                files = {"template": f}
                 response = client.post(
                     f"{url}/inspect",
                     files=files,
@@ -780,5 +805,5 @@ def cloud_inspect(template: str, url: str):
 # ENTRY POINT
 # =============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

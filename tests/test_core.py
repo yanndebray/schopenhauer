@@ -112,10 +112,7 @@ class TestTables:
     def test_add_simple_table(self):
         """Test adding a simple table."""
         doc = WordDocument()
-        table = doc.add_table(
-            data=[["A", "B"], ["C", "D"]],
-            headers=["Col1", "Col2"]
-        )
+        table = doc.add_table(data=[["A", "B"], ["C", "D"]], headers=["Col1", "Col2"])
         assert table is not None
         assert len(table.rows) == 3  # Header + 2 data rows
 
@@ -251,10 +248,7 @@ class TestFromSpec:
 
     def test_from_spec_minimal(self):
         """Test creating document from minimal spec."""
-        spec = {
-            "title": "Test Document",
-            "sections": []
-        }
+        spec = {"title": "Test Document", "sections": []}
         doc = WordDocument.from_spec(spec)
         assert doc is not None
 
@@ -266,7 +260,7 @@ class TestFromSpec:
                 {"type": "heading", "title": "Section 1", "level": 1},
                 {"type": "content", "text": "Hello World"},
                 {"type": "content", "bullets": ["Item 1", "Item 2"]},
-            ]
+            ],
         }
         doc = WordDocument.from_spec(spec)
         info = doc.get_info()
@@ -275,13 +269,7 @@ class TestFromSpec:
     def test_from_spec_with_table(self):
         """Test creating document from spec with table."""
         spec = {
-            "sections": [
-                {
-                    "type": "table",
-                    "headers": ["A", "B"],
-                    "data": [["1", "2"], ["3", "4"]]
-                }
-            ]
+            "sections": [{"type": "table", "headers": ["A", "B"], "data": [["1", "2"], ["3", "4"]]}]
         }
         doc = WordDocument.from_spec(spec)
         assert len(doc.doc.tables) == 1
@@ -303,7 +291,7 @@ sections:
 """
         with tempfile.TemporaryDirectory() as tmpdir:
             yaml_path = os.path.join(tmpdir, "test.yaml")
-            with open(yaml_path, 'w') as f:
+            with open(yaml_path, "w") as f:
                 f.write(yaml_content)
 
             doc = WordDocument.from_yaml(yaml_path)

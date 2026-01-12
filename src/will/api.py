@@ -33,8 +33,10 @@ from will.templates import list_templates, list_yaml_templates
 # API MODELS
 # =============================================================================
 
+
 class HealthResponse(BaseModel):
     """Health check response."""
+
     status: str = "healthy"
     version: str = __version__
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
@@ -42,6 +44,7 @@ class HealthResponse(BaseModel):
 
 class TemplateInfo(BaseModel):
     """Template information."""
+
     name: str
     description: str
     page_size: str
@@ -49,12 +52,14 @@ class TemplateInfo(BaseModel):
 
 class TemplatesResponse(BaseModel):
     """List of templates response."""
+
     templates: list[TemplateInfo]
     yaml_templates: list[str]
 
 
 class SectionSpec(BaseModel):
     """Document section specification."""
+
     type: str = "content"
     title: Optional[str] = None
     subtitle: Optional[str] = None
@@ -78,6 +83,7 @@ class SectionSpec(BaseModel):
 
 class DocumentSpec(BaseModel):
     """Document specification for generation."""
+
     title: Optional[str] = None
     subtitle: Optional[str] = None
     author: Optional[str] = None
@@ -94,6 +100,7 @@ class DocumentSpec(BaseModel):
 
 class DocumentInfo(BaseModel):
     """Document information response."""
+
     title: str
     author: str
     created: str
@@ -108,17 +115,20 @@ class DocumentInfo(BaseModel):
 
 class BatchItem(BaseModel):
     """Single item in a batch generation request."""
+
     spec: DocumentSpec
     filename: str
 
 
 class BatchRequest(BaseModel):
     """Batch generation request."""
+
     items: list[BatchItem]
 
 
 class ErrorResponse(BaseModel):
     """Error response."""
+
     error: str
     detail: Optional[str] = None
 
@@ -148,6 +158,7 @@ app.add_middleware(
 # =============================================================================
 # HEALTH ENDPOINT
 # =============================================================================
+
 
 @app.get(
     "/health",
@@ -179,6 +190,7 @@ async def root():
 # TEMPLATE ENDPOINTS
 # =============================================================================
 
+
 @app.get(
     "/templates",
     response_model=TemplatesResponse,
@@ -191,9 +203,7 @@ async def get_templates():
 
     Returns both document templates and YAML specification templates.
     """
-    templates = [
-        TemplateInfo(**t) for t in list_templates()
-    ]
+    templates = [TemplateInfo(**t) for t in list_templates()]
     yaml_templates = list_yaml_templates()
 
     return TemplatesResponse(
@@ -227,13 +237,16 @@ async def get_template_info(name: str):
 # GENERATION ENDPOINTS
 # =============================================================================
 
+
 @app.post(
     "/generate",
     tags=["Generation"],
     summary="Generate document from specification",
     responses={
         200: {
-            "content": {"application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}},
+            "content": {
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}
+            },
             "description": "Generated Word document",
         },
         400: {"model": ErrorResponse},
@@ -253,8 +266,7 @@ async def generate_document(spec: DocumentSpec):
         # Convert sections
         if "sections" in spec_dict:
             spec_dict["sections"] = [
-                {k: v for k, v in s.items() if v is not None}
-                for s in spec_dict["sections"]
+                {k: v for k, v in s.items() if v is not None} for s in spec_dict["sections"]
             ]
 
         # Create document
@@ -287,7 +299,9 @@ async def generate_document(spec: DocumentSpec):
     summary="Generate document with uploaded template",
     responses={
         200: {
-            "content": {"application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}},
+            "content": {
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}
+            },
             "description": "Generated Word document",
         },
         400: {"model": ErrorResponse},
@@ -353,6 +367,7 @@ async def generate_with_template(
 # INSPECTION ENDPOINTS
 # =============================================================================
 
+
 @app.post(
     "/inspect",
     response_model=DocumentInfo,
@@ -394,6 +409,7 @@ async def inspect_document(
 # BATCH ENDPOINTS
 # =============================================================================
 
+
 @app.post(
     "/batch/generate",
     tags=["Batch"],
@@ -419,7 +435,7 @@ async def batch_generate(request: BatchRequest):
         # Create ZIP in memory
         zip_buffer = BytesIO()
 
-        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
             for item in request.items:
                 # Convert spec to dict
                 spec_dict = item.spec.model_dump(exclude_none=True)
@@ -427,8 +443,7 @@ async def batch_generate(request: BatchRequest):
                 # Convert sections
                 if "sections" in spec_dict:
                     spec_dict["sections"] = [
-                        {k: v for k, v in s.items() if v is not None}
-                        for s in spec_dict["sections"]
+                        {k: v for k, v in s.items() if v is not None} for s in spec_dict["sections"]
                     ]
 
                 # Create document
@@ -441,8 +456,8 @@ async def batch_generate(request: BatchRequest):
                 # Add to ZIP
                 doc_bytes = doc.to_bytes()
                 filename = item.filename
-                if not filename.endswith('.docx'):
-                    filename += '.docx'
+                if not filename.endswith(".docx"):
+                    filename += ".docx"
                 zip_file.writestr(filename, doc_bytes)
 
         zip_buffer.seek(0)
@@ -463,13 +478,16 @@ async def batch_generate(request: BatchRequest):
 # PLACEHOLDER ENDPOINTS
 # =============================================================================
 
+
 @app.post(
     "/replace",
     tags=["Utilities"],
     summary="Replace placeholders in uploaded document",
     responses={
         200: {
-            "content": {"application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}},
+            "content": {
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {}
+            },
             "description": "Document with replaced placeholders",
         },
         400: {"model": ErrorResponse},
@@ -526,6 +544,7 @@ async def replace_placeholders(
 # ERROR HANDLERS
 # =============================================================================
 
+
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Handle unexpected exceptions."""
@@ -538,6 +557,7 @@ async def general_exception_handler(request, exc):
 # =============================================================================
 # STARTUP/SHUTDOWN
 # =============================================================================
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -558,4 +578,5 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

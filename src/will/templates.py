@@ -13,6 +13,7 @@ from typing import Any, Optional
 @dataclass
 class TemplateConfig:
     """Configuration for a document template."""
+
     name: str
     description: str
     page_size: str = "letter"
@@ -46,7 +47,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=True,
         include_page_numbers=True,
     ),
-
     "report": TemplateConfig(
         name="report",
         description="Business report with header and footer",
@@ -59,7 +59,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         footer_text="{{AUTHOR}} - {{DATE}}",
         line_spacing=1.15,
     ),
-
     "memo": TemplateConfig(
         name="memo",
         description="Internal memo format",
@@ -77,7 +76,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
             {"type": "horizontal_line"},
         ],
     ),
-
     "letter": TemplateConfig(
         name="letter",
         description="Formal business letter",
@@ -97,7 +95,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
             {"type": "content", "text": "Dear {{RECIPIENT_NAME}}:"},
         ],
     ),
-
     "academic": TemplateConfig(
         name="academic",
         description="Academic paper format (APA-style)",
@@ -112,7 +109,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         line_spacing=2.0,
         first_line_indent=0.5,
     ),
-
     "proposal": TemplateConfig(
         name="proposal",
         description="Project proposal template",
@@ -131,7 +127,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
             {"type": "page_break"},
         ],
     ),
-
     "manual": TemplateConfig(
         name="manual",
         description="Technical documentation / user manual",
@@ -143,7 +138,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_page_numbers=True,
         footer_text="Version {{VERSION}}",
     ),
-
     "contract": TemplateConfig(
         name="contract",
         description="Legal contract format",
@@ -156,7 +150,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         footer_text="Page {{PAGE}} of {{TOTAL_PAGES}}",
         line_spacing=1.5,
     ),
-
     "resume": TemplateConfig(
         name="resume",
         description="Professional resume/CV template",
@@ -166,7 +159,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=False,
         line_spacing=1.0,
     ),
-
     "newsletter": TemplateConfig(
         name="newsletter",
         description="Company newsletter format",
@@ -177,7 +169,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=True,
         include_page_numbers=True,
     ),
-
     "minutes": TemplateConfig(
         name="minutes",
         description="Meeting minutes template",
@@ -195,7 +186,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
             {"type": "horizontal_line"},
         ],
     ),
-
     "invoice": TemplateConfig(
         name="invoice",
         description="Business invoice template",
@@ -205,7 +195,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=True,
         footer_text="Thank you for your business!",
     ),
-
     "a4": TemplateConfig(
         name="a4",
         description="A4 page size (European standard)",
@@ -214,7 +203,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=True,
         include_page_numbers=True,
     ),
-
     "a4-narrow": TemplateConfig(
         name="a4-narrow",
         description="A4 page size with narrow margins",
@@ -223,7 +211,6 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
         include_footer=True,
         include_page_numbers=True,
     ),
-
     "legal": TemplateConfig(
         name="legal",
         description="Legal page size",
@@ -240,6 +227,7 @@ BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
 # =============================================================================
 # TEMPLATE FUNCTIONS
 # =============================================================================
+
 
 def get_template(name: str) -> Optional[TemplateConfig]:
     """
@@ -317,11 +305,7 @@ def apply_template(doc, template_name: str) -> bool:
     return True
 
 
-def create_custom_template(
-    name: str,
-    description: str = "",
-    **kwargs
-) -> TemplateConfig:
+def create_custom_template(name: str, description: str = "", **kwargs) -> TemplateConfig:
     """
     Create a custom template configuration.
 
@@ -333,11 +317,7 @@ def create_custom_template(
     Returns:
         TemplateConfig instance.
     """
-    return TemplateConfig(
-        name=name,
-        description=description,
-        **kwargs
-    )
+    return TemplateConfig(name=name, description=description, **kwargs)
 
 
 # =============================================================================
@@ -363,7 +343,6 @@ footer: ""
 # Content sections
 sections: []
 """,
-
     "report": """# Schopenhauer Document Specification
 # Business Report Template
 
@@ -426,7 +405,6 @@ sections:
       - Expand product features
       - Focus on customer retention
 """,
-
     "memo": """# Schopenhauer Document Specification
 # Internal Memo Template
 
@@ -454,7 +432,6 @@ sections:
     text: |
       [Your memo content goes here]
 """,
-
     "proposal": """# Schopenhauer Document Specification
 # Project Proposal Template
 
@@ -534,7 +511,6 @@ sections:
       - Schedule a follow-up call
       - Sign agreement and begin work
 """,
-
     "meeting-minutes": """# Schopenhauer Document Specification
 # Meeting Minutes Template
 
@@ -602,7 +578,6 @@ sections:
   - type: content
     text: "Date: {{NEXT_MEETING_DATE}}"
 """,
-
     "documentation": """# Schopenhauer Document Specification
 # Technical Documentation Template
 
@@ -742,5 +717,5 @@ def save_yaml_template(name: str, output_path: str) -> bool:
     if not template:
         return False
 
-    Path(output_path).write_text(template, encoding='utf-8')
+    Path(output_path).write_text(template, encoding="utf-8")
     return True

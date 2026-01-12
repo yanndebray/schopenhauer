@@ -18,60 +18,53 @@ from docx.shared import Cm, Inches, Pt, RGBColor
 # COLOR PALETTE - Burgundy/Wine theme (Schopenhauer's contemplative aesthetic)
 # =============================================================================
 
+
 class Colors(Enum):
     """Schopenhauer color palette - Deep, contemplative burgundy tones."""
 
     # Primary colors
-    PRIMARY = "722F37"        # Burgundy/Wine - main brand color
-    PRIMARY_DARK = "4A1C23"   # Dark burgundy - headings, emphasis
+    PRIMARY = "722F37"  # Burgundy/Wine - main brand color
+    PRIMARY_DARK = "4A1C23"  # Dark burgundy - headings, emphasis
     PRIMARY_LIGHT = "A64D57"  # Light burgundy - accents
 
     # Secondary colors
-    SECONDARY = "2C3E50"      # Dark slate - body text, professional
+    SECONDARY = "2C3E50"  # Dark slate - body text, professional
     SECONDARY_LIGHT = "34495E"  # Lighter slate
 
     # Accent colors
-    ACCENT = "D4A574"         # Gold/bronze - highlights, call-outs
-    ACCENT_LIGHT = "E8C9A0"   # Light gold
+    ACCENT = "D4A574"  # Gold/bronze - highlights, call-outs
+    ACCENT_LIGHT = "E8C9A0"  # Light gold
 
     # Semantic colors
-    SUCCESS = "27AE60"        # Green - success, positive
-    WARNING = "F39C12"        # Orange - warnings, attention
-    DANGER = "C0392B"         # Red - errors, critical
-    INFO = "3498DB"           # Blue - information
+    SUCCESS = "27AE60"  # Green - success, positive
+    WARNING = "F39C12"  # Orange - warnings, attention
+    DANGER = "C0392B"  # Red - errors, critical
+    INFO = "3498DB"  # Blue - information
 
     # Neutral colors
     WHITE = "FFFFFF"
     BLACK = "000000"
-    GRAY_100 = "F8F9FA"       # Lightest gray - backgrounds
+    GRAY_100 = "F8F9FA"  # Lightest gray - backgrounds
     GRAY_200 = "E9ECEF"
     GRAY_300 = "DEE2E6"
     GRAY_400 = "CED4DA"
-    GRAY_500 = "ADB5BD"       # Medium gray
+    GRAY_500 = "ADB5BD"  # Medium gray
     GRAY_600 = "6C757D"
     GRAY_700 = "495057"
     GRAY_800 = "343A40"
-    GRAY_900 = "212529"       # Darkest gray
+    GRAY_900 = "212529"  # Darkest gray
 
     @property
     def rgb(self) -> RGBColor:
         """Convert hex color to RGBColor object."""
         hex_color = self.value
-        return RGBColor(
-            int(hex_color[0:2], 16),
-            int(hex_color[2:4], 16),
-            int(hex_color[4:6], 16)
-        )
+        return RGBColor(int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16))
 
     @classmethod
     def from_hex(cls, hex_color: str) -> RGBColor:
         """Convert any hex color string to RGBColor."""
-        hex_color = hex_color.lstrip('#')
-        return RGBColor(
-            int(hex_color[0:2], 16),
-            int(hex_color[2:4], 16),
-            int(hex_color[4:6], 16)
-        )
+        hex_color = hex_color.lstrip("#")
+        return RGBColor(int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16))
 
 
 # Convenience access to colors
@@ -95,9 +88,11 @@ BRAND = {
 # TYPOGRAPHY - Font definitions
 # =============================================================================
 
+
 @dataclass
 class FontSpec:
     """Font specification with family, size, and style options."""
+
     family: str
     size: int  # in points
     bold: bool = False
@@ -150,6 +145,7 @@ FONTS = Fonts
 # =============================================================================
 # SPACING AND LAYOUT
 # =============================================================================
+
 
 class Margins:
     """Page margin presets."""
@@ -236,9 +232,11 @@ SPACING = Spacing
 # STYLE PRESETS
 # =============================================================================
 
+
 @dataclass
 class StylePreset:
     """Complete style preset for document elements."""
+
     font: FontSpec
     alignment: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.LEFT
     space_before: Pt = Pt(0)
@@ -328,6 +326,7 @@ STYLES = Styles
 # TABLE STYLES
 # =============================================================================
 
+
 class TableStyles:
     """Table styling presets."""
 
@@ -338,9 +337,7 @@ class TableStyles:
         from docx.oxml.ns import nsdecls
 
         # Set background color
-        shading = parse_xml(
-            f'<w:shd {nsdecls("w")} w:fill="{color.value}" w:val="clear"/>'
-        )
+        shading = parse_xml(f'<w:shd {nsdecls("w")} w:fill="{color.value}" w:val="clear"/>')
         cell._tc.get_or_add_tcPr().append(shading)
 
         # Style text
@@ -382,10 +379,11 @@ TABLE_STYLES = TableStyles
 # UTILITY FUNCTIONS
 # =============================================================================
 
+
 def hex_to_rgb(hex_color: str) -> tuple:
     """Convert hex color to RGB tuple."""
-    hex_color = hex_color.lstrip('#')
-    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
 
 
 def rgb_to_hex(r: int, g: int, b: int) -> str:

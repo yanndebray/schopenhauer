@@ -593,6 +593,7 @@ class DocumentBuilder:
 # CONVENIENCE FUNCTIONS
 # =============================================================================
 
+
 def create_document(
     title: Optional[str] = None,
     subtitle: Optional[str] = None,
