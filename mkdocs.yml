@@ -1,0 +1,131 @@
+site_name: "Schopenhauer's Will - DocX Generator"
+site_description: "A powerful CLI tool and Python library for generating Word documents from YAML/JSON specifications"
+site_author: Schopenhauer Contributors
+site_url: https://yanndebray.github.io/schopenhauer
+
+repo_name: yanndebray/schopenhauer
+repo_url: https://github.com/yanndebray/schopenhauer
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2024 Schopenhauer Contributors
+
+theme:
+  name: material
+  language: en
+
+  palette:
+    # Light mode - Burgundy theme
+    - scheme: default
+      primary: brown
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Dark mode
+    - scheme: slate
+      primary: brown
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/file-document-edit
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yanndebray/schopenhauer
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/schopenhauer/
+
+  generator: false
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: yanndebray
+      repo: schopenhauer
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: install.md
+    - Quick Start: quickstart.md
+    - YAML Format: yaml-format.md
+  - Commands:
+    - Overview: commands/index.md
+    - create: commands/create.md
+    - generate: commands/generate.md
+  - Python API: api.md
+  - REST API: rest-api.md
+  - Deployment:
+    - Cloud Run: deployment/cloud-run.md

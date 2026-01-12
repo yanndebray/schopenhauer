@@ -1,0 +1,307 @@
+# =============================================================================
+# Schopenhauer Sample Document Specification
+# =============================================================================
+# This sample demonstrates all available features and section types.
+#
+# Generate with:
+#   will generate sample.yaml -o sample.docx
+#
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Document Metadata
+# -----------------------------------------------------------------------------
+title: Sample Document
+subtitle: Demonstrating All Features
+author: Schopenhauer Contributors
+
+# -----------------------------------------------------------------------------
+# Page Setup
+# -----------------------------------------------------------------------------
+page_size: letter      # Options: letter, legal, a4, a5
+margins: moderate      # Options: normal, narrow, moderate, wide
+
+# -----------------------------------------------------------------------------
+# Header & Footer
+# -----------------------------------------------------------------------------
+header: "Schopenhauer Sample Document"
+footer: "Generated with Schopenhauer's Will"
+
+# -----------------------------------------------------------------------------
+# Document Options
+# -----------------------------------------------------------------------------
+table_of_contents: true
+title_page_break: true
+
+# -----------------------------------------------------------------------------
+# Content Sections
+# -----------------------------------------------------------------------------
+sections:
+
+  # ===========================================================================
+  # Section 1: Introduction
+  # ===========================================================================
+  - type: section
+    title: Introduction
+
+  - type: content
+    text: |
+      Welcome to this sample document generated with Schopenhauer's Will.
+      This document demonstrates all the available features and section types
+      that you can use in your YAML specifications.
+
+      Schopenhauer transforms simple YAML files into professional Word documents,
+      making document generation easy and reproducible.
+
+  # ===========================================================================
+  # Section 2: Text Content
+  # ===========================================================================
+  - type: section
+    title: Text Content
+    page_break: true
+
+  - type: heading
+    title: Basic Paragraphs
+    level: 2
+
+  - type: content
+    text: |
+      This is a basic paragraph. You can write multiple lines in YAML using
+      the pipe (|) character, which preserves line breaks within the text.
+
+      Multiple paragraphs are separated by blank lines. Each paragraph will
+      be rendered as a separate block in the Word document.
+
+  - type: heading
+    title: Bullet Lists
+    level: 2
+
+  - type: content
+    bullets:
+      - First bullet point
+      - Second bullet point
+      - Third bullet point with more detail
+      - Fourth point demonstrating longer text that might wrap to multiple lines
+
+  - type: heading
+    title: Numbered Lists
+    level: 2
+
+  - type: content
+    numbered:
+      - First step in the process
+      - Second step follows the first
+      - Third step completes the sequence
+      - Fourth step for additional actions
+
+  - type: heading
+    title: Combined Content
+    level: 2
+
+  - type: content
+    title: This Section Has Its Own Title
+    level: 3
+    text: |
+      You can combine a title, text, and lists in a single content section.
+      This is useful for creating structured content blocks.
+    bullets:
+      - Supporting point one
+      - Supporting point two
+      - Supporting point three
+
+  # ===========================================================================
+  # Section 3: Tables
+  # ===========================================================================
+  - type: section
+    title: Tables
+    page_break: true
+
+  - type: content
+    text: |
+      Tables are a powerful way to present structured data.
+      Schopenhauer supports tables with headers and custom column widths.
+
+  - type: table
+    title: Basic Table Example
+    headers:
+      - Name
+      - Department
+      - Role
+    data:
+      - [Alice Johnson, Engineering, Senior Developer]
+      - [Bob Smith, Marketing, Marketing Manager]
+      - [Carol Davis, Finance, Financial Analyst]
+      - [David Wilson, Operations, Operations Lead]
+
+  - type: table
+    title: Financial Data Table
+    headers:
+      - Quarter
+      - Revenue
+      - Expenses
+      - Profit
+    data:
+      - [Q1 2024, "$1,200,000", "$800,000", "$400,000"]
+      - [Q2 2024, "$1,350,000", "$850,000", "$500,000"]
+      - [Q3 2024, "$1,500,000", "$900,000", "$600,000"]
+      - [Q4 2024, "$1,800,000", "$950,000", "$850,000"]
+    column_widths:
+      - 1.5
+      - 1.5
+      - 1.5
+      - 1.5
+
+  # ===========================================================================
+  # Section 4: Special Content
+  # ===========================================================================
+  - type: section
+    title: Special Content Types
+    page_break: true
+
+  - type: heading
+    title: Blockquotes
+    level: 2
+
+  - type: content
+    text: Quotes are great for highlighting important statements or citations.
+
+  - type: quote
+    text: The world is my representation. This is a truth valid with reference to every living and knowing being.
+    author: Arthur Schopenhauer
+
+  - type: quote
+    text: To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.
+    author: Ralph Waldo Emerson
+
+  - type: heading
+    title: Code Blocks
+    level: 2
+
+  - type: content
+    text: Code blocks are useful for technical documentation.
+
+  - type: code
+    title: Python Example
+    language: python
+    text: |
+      from will import WordDocument
+
+      # Create a new document
+      doc = WordDocument(title="My Report")
+      doc.add_heading("Introduction", level=1)
+      doc.add_paragraph("Hello, World!")
+      doc.save("report.docx")
+
+  - type: code
+    title: YAML Example
+    language: yaml
+    text: |
+      title: My Document
+      sections:
+        - type: heading
+          title: Welcome
+        - type: content
+          text: This is my document.
+
+  - type: heading
+    title: Horizontal Lines
+    level: 2
+
+  - type: content
+    text: Horizontal lines can be used to separate content visually.
+
+  - type: horizontal_line
+
+  - type: content
+    text: Content after the horizontal line.
+
+  # ===========================================================================
+  # Section 5: Page Breaks
+  # ===========================================================================
+  - type: section
+    title: Working with Page Breaks
+    page_break: true
+
+  - type: content
+    text: |
+      Page breaks can be added between sections to ensure content starts
+      on a new page. This is useful for chapter-based documents or reports.
+
+      The section above used 'page_break: true' to start on a new page.
+      You can also add explicit page breaks:
+
+  - type: page_break
+
+  - type: content
+    text: This content appears after an explicit page break.
+
+  # ===========================================================================
+  # Section 6: Using Placeholders
+  # ===========================================================================
+  - type: section
+    title: Placeholder System
+    page_break: true
+
+  - type: content
+    text: |
+      Schopenhauer supports placeholders using the {{PLACEHOLDER}} syntax.
+      These can be replaced at generation time using the -V flag:
+
+        will generate template.yaml -o doc.docx -V NAME="John"
+
+  - type: content
+    text: |
+      Example with placeholders:
+      - Client Name: {{CLIENT_NAME}}
+      - Project Name: {{PROJECT_NAME}}
+      - Date: {{DATE}}
+      - Amount: {{AMOUNT}}
+
+  - type: content
+    text: |
+      To replace these, run:
+        will generate sample.yaml -o sample.docx \
+          -V CLIENT_NAME="Acme Corp" \
+          -V PROJECT_NAME="Website Redesign" \
+          -V DATE="January 15, 2024" \
+          -V AMOUNT="$25,000"
+
+  # ===========================================================================
+  # Section 7: Summary
+  # ===========================================================================
+  - type: section
+    title: Summary
+    page_break: true
+
+  - type: content
+    text: |
+      This sample document has demonstrated the following features:
+
+  - type: content
+    bullets:
+      - Document metadata (title, subtitle, author)
+      - Page setup (size, margins)
+      - Headers and footers
+      - Table of contents
+      - Section headers with page breaks
+      - Headings at multiple levels
+      - Paragraphs with multi-line text
+      - Bullet lists
+      - Numbered lists
+      - Combined content blocks
+      - Data tables with headers
+      - Tables with custom column widths
+      - Blockquotes with attribution
+      - Code blocks
+      - Horizontal lines
+      - Page breaks
+      - Placeholder system
+
+  - type: horizontal_line
+
+  - type: content
+    text: |
+      For more information, visit the Schopenhauer documentation at:
+      https://schopenhauer.github.io/schopenhauer
+
+      Happy documenting!
