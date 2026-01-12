@@ -2,10 +2,10 @@
 Tests for the CLI commands.
 """
 
-import pytest
-import tempfile
 import os
-from pathlib import Path
+import tempfile
+
+import pytest
 from click.testing import CliRunner
 
 from will.cli import main

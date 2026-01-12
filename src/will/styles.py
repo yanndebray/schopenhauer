@@ -10,11 +10,9 @@ rich burgundy/wine colors representing depth of thought.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any
-from docx.shared import Pt, Inches, Cm, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
-from docx.enum.table import WD_TABLE_ALIGNMENT
 
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Cm, Inches, Pt, RGBColor
 
 # =============================================================================
 # COLOR PALETTE - Burgundy/Wine theme (Schopenhauer's contemplative aesthetic)
@@ -336,8 +334,8 @@ class TableStyles:
     @staticmethod
     def apply_header_style(cell, color: Colors = Colors.PRIMARY):
         """Apply header styling to a table cell."""
-        from docx.oxml.ns import nsdecls
         from docx.oxml import parse_xml
+        from docx.oxml.ns import nsdecls
 
         # Set background color
         shading = parse_xml(
@@ -365,8 +363,8 @@ class TableStyles:
     @staticmethod
     def apply_alternating_rows(table, even_color: str = Colors.GRAY_100.value):
         """Apply alternating row colors to a table."""
-        from docx.oxml.ns import nsdecls
         from docx.oxml import parse_xml
+        from docx.oxml.ns import nsdecls
 
         for i, row in enumerate(table.rows):
             if i > 0 and i % 2 == 0:  # Skip header row

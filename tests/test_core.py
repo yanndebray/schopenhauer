@@ -2,10 +2,10 @@
 Tests for the WordDocument core class.
 """
 
-import pytest
-import tempfile
 import os
-from pathlib import Path
+import tempfile
+
+import pytest
 
 from will.core import WordDocument
 

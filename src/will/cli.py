@@ -14,32 +14,29 @@ Usage:
     will cloud generate spec.yaml
 """
 
-import sys
 import json
+import sys
 from pathlib import Path
-from typing import Optional, List, Dict, Any
+from typing import Optional
 
 import click
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
-from rich.syntax import Syntax
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich import print as rprint
+from rich.table import Table
 
 from will import __version__
 from will.core import WordDocument
-from will.document import DocumentBuilder, create_document, quick_report
-from will.styles import BRAND, Colors
+from will.document import create_document
+from will.styles import BRAND
 from will.templates import (
-    list_templates,
     get_template,
     get_template_names,
-    list_yaml_templates,
     get_yaml_template,
+    list_templates,
+    list_yaml_templates,
     save_yaml_template,
 )
-
 
 # Create console with safe defaults for Windows
 console = Console(force_terminal=True, safe_box=True, legacy_windows=True)
@@ -195,10 +192,10 @@ def generate(
         # Load spec
         if spec_path.suffix.lower() in ['.yaml', '.yml']:
             import yaml
-            with open(spec_path, 'r', encoding='utf-8') as f:
+            with open(spec_path, encoding='utf-8') as f:
                 spec = yaml.safe_load(f)
         else:
-            with open(spec_path, 'r', encoding='utf-8') as f:
+            with open(spec_path, encoding='utf-8') as f:
                 spec = json.load(f)
 
         # Apply template override
@@ -704,10 +701,10 @@ def cloud_generate(
         # Load spec
         spec_path = Path(spec_file)
         if spec_path.suffix.lower() in ['.yaml', '.yml']:
-            with open(spec_path, 'r', encoding='utf-8') as f:
+            with open(spec_path, encoding='utf-8') as f:
                 spec = yaml.safe_load(f)
         else:
-            with open(spec_path, 'r', encoding='utf-8') as f:
+            with open(spec_path, encoding='utf-8') as f:
                 spec = json.load(f)
 
         with Progress(

@@ -105,6 +105,8 @@ target-version = ["py39", "py310", "py311", "py312"]
 [tool.ruff]
 line-length = 100
 target-version = "py39"
+
+[tool.ruff.lint]
 select = [
     "E",    # pycodestyle errors
     "W",    # pycodestyle warnings
@@ -116,6 +118,8 @@ select = [
 ]
 ignore = [
     "E501",  # line too long (handled by black)
+    "B008",  # function call in default argument (ok for FastAPI File/Form)
+    "B904",  # raise from in except (not always needed for HTTPException)
 ]
 
 [tool.mypy]

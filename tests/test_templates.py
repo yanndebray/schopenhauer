@@ -2,18 +2,17 @@
 Tests for the templates module.
 """
 
-import pytest
-import tempfile
 import os
+import tempfile
 
 from will.templates import (
-    get_template,
-    list_templates,
-    get_template_names,
-    list_yaml_templates,
-    get_yaml_template,
-    save_yaml_template,
     BUILTIN_TEMPLATES,
+    get_template,
+    get_template_names,
+    get_yaml_template,
+    list_templates,
+    list_yaml_templates,
+    save_yaml_template,
 )
 
 

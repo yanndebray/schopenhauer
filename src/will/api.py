@@ -16,19 +16,18 @@ Endpoints:
     POST /batch/generate      - Batch generate multiple documents
 """
 
-from io import BytesIO
-from typing import Optional, List, Dict, Any
 from datetime import datetime
+from io import BytesIO
+from typing import Any, Optional
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from will import __version__
 from will.core import WordDocument
-from will.templates import list_templates, get_template_names, list_yaml_templates
-
+from will.templates import list_templates, list_yaml_templates
 
 # =============================================================================
 # API MODELS
@@ -50,8 +49,8 @@ class TemplateInfo(BaseModel):
 
 class TemplatesResponse(BaseModel):
     """List of templates response."""
-    templates: List[TemplateInfo]
-    yaml_templates: List[str]
+    templates: list[TemplateInfo]
+    yaml_templates: list[str]
 
 
 class SectionSpec(BaseModel):
@@ -61,11 +60,11 @@ class SectionSpec(BaseModel):
     subtitle: Optional[str] = None
     text: Optional[str] = None
     level: int = 2
-    bullets: Optional[List[str]] = None
-    numbered: Optional[List[str]] = None
-    headers: Optional[List[str]] = None
-    data: Optional[List[List[Any]]] = None
-    column_widths: Optional[List[float]] = None
+    bullets: Optional[list[str]] = None
+    numbered: Optional[list[str]] = None
+    headers: Optional[list[str]] = None
+    data: Optional[list[list[Any]]] = None
+    column_widths: Optional[list[float]] = None
     image: Optional[str] = None
     path: Optional[str] = None
     width: Optional[float] = None
@@ -89,8 +88,8 @@ class DocumentSpec(BaseModel):
     footer: Optional[str] = None
     table_of_contents: bool = False
     title_page_break: bool = True
-    sections: List[SectionSpec] = Field(default_factory=list)
-    placeholders: Optional[Dict[str, str]] = None
+    sections: list[SectionSpec] = Field(default_factory=list)
+    placeholders: Optional[dict[str, str]] = None
 
 
 class DocumentInfo(BaseModel):
@@ -103,8 +102,8 @@ class DocumentInfo(BaseModel):
     tables: int
     sections: int
     word_count: int
-    styles: List[str]
-    placeholders: List[str]
+    styles: list[str]
+    placeholders: list[str]
 
 
 class BatchItem(BaseModel):
@@ -115,7 +114,7 @@ class BatchItem(BaseModel):
 
 class BatchRequest(BaseModel):
     """Batch generation request."""
-    items: List[BatchItem]
+    items: list[BatchItem]
 
 
 class ErrorResponse(BaseModel):
@@ -306,8 +305,8 @@ async def generate_with_template(
     The spec is a JSON string with the document specification.
     """
     import json
-    import tempfile
     import os
+    import tempfile
 
     try:
         # Parse spec JSON
@@ -369,8 +368,8 @@ async def inspect_document(
     Returns information about the document including placeholders,
     styles, and statistics.
     """
-    import tempfile
     import os
+    import tempfile
 
     try:
         # Save to temp file
@@ -488,8 +487,8 @@ async def replace_placeholders(
     placeholder names to values.
     """
     import json
-    import tempfile
     import os
+    import tempfile
 
     try:
         # Parse replacements

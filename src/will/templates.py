@@ -5,9 +5,9 @@ This module provides pre-configured templates for common document types
 and utilities for working with custom templates.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Optional
 
 
 @dataclass
@@ -30,14 +30,14 @@ class TemplateConfig:
     footer_text: str = ""
     line_spacing: float = 1.15
     first_line_indent: float = 0.0
-    sections: List[Dict[str, Any]] = field(default_factory=list)
+    sections: list[dict[str, Any]] = field(default_factory=list)
 
 
 # =============================================================================
 # BUILT-IN TEMPLATES
 # =============================================================================
 
-BUILTIN_TEMPLATES: Dict[str, TemplateConfig] = {
+BUILTIN_TEMPLATES: dict[str, TemplateConfig] = {
     "default": TemplateConfig(
         name="default",
         description="Clean, professional default template",
@@ -254,7 +254,7 @@ def get_template(name: str) -> Optional[TemplateConfig]:
     return BUILTIN_TEMPLATES.get(name.lower())
 
 
-def list_templates() -> List[Dict[str, str]]:
+def list_templates() -> list[dict[str, str]]:
     """
     List all available built-in templates.
 
@@ -271,7 +271,7 @@ def list_templates() -> List[Dict[str, str]]:
     ]
 
 
-def get_template_names() -> List[str]:
+def get_template_names() -> list[str]:
     """
     Get list of all template names.
 
@@ -717,7 +717,7 @@ def get_yaml_template(name: str) -> Optional[str]:
     return YAML_TEMPLATES.get(name.lower())
 
 
-def list_yaml_templates() -> List[str]:
+def list_yaml_templates() -> list[str]:
     """
     List available YAML templates.
 

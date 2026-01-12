@@ -23,16 +23,16 @@ from will.core import WordDocument
 from will.document import DocumentBuilder
 from will.styles import (
     BRAND,
-    FONTS,
     COLORS,
-    STYLES,
+    FONTS,
     MARGINS,
     PAGE_SIZES,
+    STYLES,
 )
 from will.templates import (
+    BUILTIN_TEMPLATES,
     get_template,
     list_templates,
-    BUILTIN_TEMPLATES,
 )
 
 __all__ = [

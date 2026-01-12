@@ -18,12 +18,11 @@ Example:
 """
 
 from pathlib import Path
-from typing import Optional, List, Dict, Any, Union
-from docx.shared import Pt, Inches, RGBColor
+from typing import Any, Optional, Union
+
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from will.core import WordDocument
-from will.styles import Colors, FONTS
 
 
 class DocumentBuilder:
@@ -302,7 +301,7 @@ class DocumentBuilder:
 
     def add_bullets(
         self,
-        items: List[str],
+        items: list[str],
         level: int = 0,
     ) -> "DocumentBuilder":
         """
@@ -320,7 +319,7 @@ class DocumentBuilder:
 
     def add_numbered_list(
         self,
-        items: List[str],
+        items: list[str],
         level: int = 0,
     ) -> "DocumentBuilder":
         """
@@ -342,11 +341,11 @@ class DocumentBuilder:
 
     def add_table(
         self,
-        data: List[List[Any]],
-        headers: Optional[List[str]] = None,
+        data: list[list[Any]],
+        headers: Optional[list[str]] = None,
         header_color: Optional[str] = None,
         alternating_rows: bool = True,
-        column_widths: Optional[List[float]] = None,
+        column_widths: Optional[list[float]] = None,
     ) -> "DocumentBuilder":
         """
         Add a table.
@@ -372,7 +371,7 @@ class DocumentBuilder:
 
     def add_key_value_table(
         self,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         key_header: str = "Property",
         value_header: str = "Value",
     ) -> "DocumentBuilder":
@@ -506,7 +505,7 @@ class DocumentBuilder:
     # TEMPLATE METHODS
     # =========================================================================
 
-    def replace_placeholders(self, replacements: Dict[str, str]) -> "DocumentBuilder":
+    def replace_placeholders(self, replacements: dict[str, str]) -> "DocumentBuilder":
         """
         Replace {{PLACEHOLDER}} tokens in the document.
 
@@ -568,7 +567,7 @@ class DocumentBuilder:
         """
         return self._doc.to_bytes()
 
-    def get_info(self) -> Dict[str, Any]:
+    def get_info(self) -> dict[str, Any]:
         """
         Get document information and statistics.
 
@@ -624,7 +623,7 @@ def create_document(
 
 def quick_report(
     title: str,
-    sections: List[Dict[str, Any]],
+    sections: list[dict[str, Any]],
     output_path: str,
     author: Optional[str] = None,
     include_toc: bool = False,

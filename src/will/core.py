@@ -13,22 +13,26 @@ Example:
     >>> doc.save("report.docx")
 """
 
-from pathlib import Path
-from typing import Optional, List, Dict, Any, Union, Tuple
 from io import BytesIO
+from pathlib import Path
+from typing import Any, Optional, Union
 
 from docx import Document
-from docx.shared import Pt, Inches, Cm, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING
+from docx.enum.section import WD_ORIENT
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.section import WD_ORIENT
-from docx.oxml.ns import nsdecls
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
+from docx.oxml.ns import nsdecls
+from docx.shared import Inches, Pt
 
 from will.styles import (
-    Colors, COLORS, BRAND, FONTS, MARGINS, PAGE_SIZES, SPACING, STYLES,
-    TableStyles, FontSpec
+    FONTS,
+    MARGINS,
+    PAGE_SIZES,
+    SPACING,
+    Colors,
+    TableStyles,
 )
 
 
@@ -287,7 +291,7 @@ class WordDocument:
 
     def add_bullets(
         self,
-        items: List[str],
+        items: list[str],
         level: int = 0,
         style: str = "List Bullet",
     ):
@@ -313,7 +317,7 @@ class WordDocument:
 
     def add_numbered_list(
         self,
-        items: List[str],
+        items: list[str],
         level: int = 0,
         style: str = "List Number",
     ):
@@ -342,12 +346,12 @@ class WordDocument:
 
     def add_table(
         self,
-        data: List[List[Any]],
-        headers: Optional[List[str]] = None,
+        data: list[list[Any]],
+        headers: Optional[list[str]] = None,
         style: str = "Table Grid",
         header_color: Optional[str] = None,
         alternating_rows: bool = True,
-        column_widths: Optional[List[float]] = None,
+        column_widths: Optional[list[float]] = None,
     ):
         """
         Add a table to the document.
@@ -773,7 +777,7 @@ class WordDocument:
     # TEMPLATE/PLACEHOLDER METHODS
     # =========================================================================
 
-    def replace_placeholders(self, replacements: Dict[str, str]):
+    def replace_placeholders(self, replacements: dict[str, str]):
         """
         Replace {{PLACEHOLDER}} tokens throughout the document.
 
@@ -829,7 +833,7 @@ class WordDocument:
 
         return count
 
-    def get_placeholders(self) -> List[str]:
+    def get_placeholders(self) -> list[str]:
         """
         Find all {{PLACEHOLDER}} tokens in the document.
 
@@ -862,13 +866,13 @@ class WordDocument:
                 matches = re.findall(pattern, para.text)
                 placeholders.update(matches)
 
-        return sorted(list(placeholders))
+        return sorted(placeholders)
 
     # =========================================================================
     # DOCUMENT INFO METHODS
     # =========================================================================
 
-    def get_info(self) -> Dict[str, Any]:
+    def get_info(self) -> dict[str, Any]:
         """
         Get document metadata and statistics.
 
@@ -938,7 +942,7 @@ class WordDocument:
         """
         import yaml
 
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, encoding='utf-8') as f:
             spec = yaml.safe_load(f)
 
         doc = cls.from_spec(spec)
@@ -962,7 +966,7 @@ class WordDocument:
         """
         import json
 
-        with open(json_path, 'r', encoding='utf-8') as f:
+        with open(json_path, encoding='utf-8') as f:
             spec = json.load(f)
 
         doc = cls.from_spec(spec)
@@ -973,7 +977,7 @@ class WordDocument:
         return doc
 
     @classmethod
-    def from_spec(cls, spec: Dict[str, Any]) -> "WordDocument":
+    def from_spec(cls, spec: dict[str, Any]) -> "WordDocument":
         """
         Create a document from a specification dictionary.
 
@@ -1024,7 +1028,7 @@ class WordDocument:
 
         return doc
 
-    def _process_section(self, section: Dict[str, Any]):
+    def _process_section(self, section: dict[str, Any]):
         """Process a section from the spec."""
         section_type = section.get("type", "content")
 
