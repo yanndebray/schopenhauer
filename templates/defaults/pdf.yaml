@@ -1,0 +1,6 @@
+from: markdown
+to: pdf
+standalone: true
+pdf-engine: xelatex
+variables:
+  geometry: margin=1in

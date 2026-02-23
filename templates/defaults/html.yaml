@@ -1,0 +1,4 @@
+from: markdown
+to: html
+standalone: true
+embed-resources: true

@@ -1,24 +1,31 @@
 """
 Schopenhauer - The Will to Document
 
-A powerful CLI tool and Python library for generating Word documents
-from YAML/JSON specifications.
+A CLI tool and Python library for generating professional documents
+from Markdown sources.  Uses Pandoc as the rendering engine for
+multi-format output (docx, pdf, html, pptx, epub, …).
 
 Example:
-    >>> from will import WordDocument, DocumentBuilder
+    >>> from will import render
+    >>> render("report.md", output="report.docx")
+    >>> render("report.md", output="report.pdf", format="pdf")
+
+Legacy (python-docx) usage still works:
+    >>> from will import WordDocument
     >>> doc = WordDocument()
     >>> doc.add_heading("My Report", level=1)
-    >>> doc.add_paragraph("This is the introduction.")
     >>> doc.save("report.docx")
 
 CLI Usage:
-    $ will create -o report.docx --title "My Report"
-    $ will generate spec.yaml -o report.docx
+    $ will render report.md -o report.docx
+    $ will render report.md -o report.pdf -f pdf
+    $ will generate spec.yaml -o report.docx        # legacy
 """
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __author__ = "Schopenhauer Contributors"
 
+from will.render import render
 from will.core import WordDocument
 from will.document import DocumentBuilder
 from will.styles import (
@@ -38,7 +45,9 @@ from will.templates import (
 __all__ = [
     # Version
     "__version__",
-    # Core classes
+    # Render pipeline (v0.2+)
+    "render",
+    # Core classes (legacy)
     "WordDocument",
     "DocumentBuilder",
     # Styles and configuration
