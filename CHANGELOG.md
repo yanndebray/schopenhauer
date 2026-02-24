@@ -5,29 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0] - 2026-02-22
+## [0.3.0] - 2026-02-23
 
 ### Added
-- **Pandoc backend**: Markdown becomes the source of truth, with multi-format output (docx, pdf, html, epub, pptx) via pypandoc
-- `will render` CLI command with options: `-o/--output`, `-f/--format` (multiple), `-t/--template`, `-V/--var` (KEY=VALUE), `--backend` (pandoc/legacy)
-- `src/will/render.py` — render pipeline: input detection → spec compilation → frontmatter extraction → variable preprocessing → Pandoc conversion
-- `src/will/pandoc_backend.py` — thin pypandoc wrapper with format-specific defaults (pdf-engine, embed-resources, standalone)
-- `src/will/preprocess.py` — Jinja2-based `{{var}}` substitution with passthrough undefined (unresolved vars remain as-is)
-- `src/will/spec_compiler.py` — compiles legacy YAML/JSON specs to Markdown+frontmatter for backward compatibility
-- Pandoc defaults files: `templates/defaults/docx.yaml`, `pdf.yaml`, `html.yaml`
-- `examples/report.md` — Markdown equivalent of `examples/report.yaml` with YAML frontmatter
-- Test suites: `test_render.py`, `test_preprocess.py`, `test_spec_compiler.py`, `test_pandoc_backend.py`
+- **Data Binding**: Robust data loading from CSV, YAML, and JSON files via `will.data` in frontmatter.
+- **MCP Server**: Model Context Protocol server implementation in `src/will/mcp.py` for AI agent integration.
+- **Multi-file Input**: Support for rendering multiple files at once (e.g., `will render chapters/*.md`).
+- **Pandoc Pass-through**: Support for passing arbitrary arguments directly to Pandoc using the `--` separator.
+- **JSON Schema**: Formal specification schema at `schemas/will-spec.schema.json`.
+- **Reference Doc Inspector**: `will template inspect` command to debug template styling and font inheritance.
+- **Standardized Templates**: 7 built-in reference document templates (default, report, memo, academic, book, manual, proposal).
+- **MATLAB Integration**: Example script showing document generation from MATLAB workflows.
+- **Pandoc backend**: Markdown as the source of truth, enabling multi-format output (docx, pdf, html, epub, pptx).
+- `will render` CLI command with multi-format and template support.
+- Jinja2-based preprocessing with passthrough for unresolved variables.
 
 ### Changed
-- Bumped version to 0.2.0
-- `requires-python` raised to `>=3.10`
-- Added `pypandoc-binary>=1.15` and `jinja2>=3.0` to dependencies
-- Updated keywords and classifiers for multi-format support
+- Bumped version to 0.3.0.
+- `requires-python` raised to `>=3.10`.
+- Added `pypandoc-binary`, `jinja2`, and `fastmcp` to dependencies.
 
 ### Backward Compatibility
-- Legacy `will generate` command and python-docx backend remain fully functional
-- Legacy YAML/JSON spec format accepted and compiled to Markdown internally
-- Use `--backend legacy` to force the python-docx backend
+- Legacy `will generate` command and python-docx backend remain functional.
+- Legacy YAML/JSON spec format automatically compiled to Markdown internally.
 
 ## [0.1.1] - 2026-01-12
 
@@ -57,6 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker support and GCP Cloud Run deployment
 - MkDocs documentation with Material theme
 
-[0.2.0]: https://github.com/yanndebray/schopenhauer/compare/v0.1.1...v0.2.0
+[0.3.0]: https://github.com/yanndebray/schopenhauer/compare/v0.1.1...v0.3.0
 [0.1.1]: https://github.com/yanndebray/schopenhauer/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/yanndebray/schopenhauer/releases/tag/v0.1.0

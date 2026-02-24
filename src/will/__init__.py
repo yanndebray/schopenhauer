@@ -22,7 +22,7 @@ CLI Usage:
     $ will generate spec.yaml -o report.docx        # legacy
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __author__ = "Schopenhauer Contributors"
 
 from will.core import WordDocument

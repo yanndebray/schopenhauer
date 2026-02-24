@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "schopenhauer"
-version = "0.2.0"
+version = "0.3.0"
 description = "A CLI tool and Python library for generating professional documents from Markdown sources"
 readme = "README.md"
 license = {text = "MIT"}
