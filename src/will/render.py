@@ -10,6 +10,7 @@ from pathlib import Path
 
 import yaml
 
+from will.data_loader import DataLoaderError, load_data_map
 from will.pandoc_backend import convert as pandoc_convert
 from will.pandoc_backend import convert_to_bytes as pandoc_convert_to_bytes
 from will.preprocess import preprocess
@@ -29,19 +30,19 @@ class RenderError(Exception):
 
 
 def render(
-    source: str | Path,
+    source: str | Path | list[str | Path],
     output: str | Path | None = None,
     format: str | None = None,
     template: str | None = None,
     variables: dict | None = None,
     backend: str = "pandoc",
+    extra_args: list[str] | None = None,
 ) -> Path | bytes:
-    """Render a document from Markdown or a legacy spec file.
+    """Render a document from one or more Markdown or legacy spec files.
 
     Args:
         source: Path to a ``.md``, ``.yaml``, ``.yml``, or ``.json`` file,
-            or a raw Markdown string (detected by the absence of a file
-            extension on disk).
+            or a raw Markdown string, or a list of any of these.
         output: Destination file path.  When *None*, raw bytes are returned.
         format: Output format (``docx``, ``pdf``, ``html``, …).
             Inferred from *output* extension when omitted.
@@ -49,6 +50,7 @@ def render(
             or an absolute/relative path to a ``.docx`` reference doc.
         variables: Extra variables for ``{{var}}`` substitution.
         backend: ``"pandoc"`` (default) or ``"legacy"`` (python-docx).
+        extra_args: Extra arguments passed directly to Pandoc.
 
     Returns:
         The output ``Path`` when *output* is given, otherwise ``bytes``.
@@ -57,36 +59,86 @@ def render(
         RenderError: On any failure in the pipeline.
     """
     variables = dict(variables or {})
+    extra_args = list(extra_args or [])
 
     # --- Legacy backend shortcut ---------------------------------------------
     if backend == "legacy":
+        if isinstance(source, list):
+            raise RenderError("Legacy backend does not support multiple input files.")
+        if extra_args:
+            logger.warning("Legacy backend does not support extra_args, ignoring.")
         return _render_legacy(source, output, variables)
 
-    # --- Determine Markdown content ------------------------------------------
-    source_path = Path(source) if not isinstance(source, Path) else source
+    # --- Normalize sources to a list -----------------------------------------
+    sources = source if isinstance(source, list) else [source]
+    all_frontmatter = {}
+    body_parts = []
+    
+    # Track the directory of the first file for relative data paths
+    first_file_dir = Path.cwd()
+    first_file_found = False
 
-    if source_path.is_file():
-        suffix = source_path.suffix.lower()
-        if suffix in (".yaml", ".yml", ".json"):
-            markdown = compile_spec_file(source_path)
+    for s in sources:
+        source_path = Path(s) if not isinstance(s, Path) else s
+        
+        # --- Determine Markdown content --------------------------------------
+        if source_path.is_file():
+            if not first_file_found:
+                first_file_dir = source_path.parent
+                first_file_found = True
+            
+            suffix = source_path.suffix.lower()
+            if suffix in (".yaml", ".yml", ".json"):
+                markdown = compile_spec_file(source_path)
+            else:
+                markdown = source_path.read_text(encoding="utf-8")
+        elif source_path.suffix and not source_path.is_file():
+            raise RenderError(f"Source not found: {s}")
+        elif isinstance(s, str):
+            markdown = s
         else:
-            markdown = source_path.read_text(encoding="utf-8")
-    elif source_path.suffix and not source_path.is_file():
-        # Looks like a file path (has extension) but doesn't exist
-        raise RenderError(f"Source not found: {source}")
-    elif isinstance(source, str):
-        # Treat as raw Markdown string
-        markdown = source
-    else:
-        raise RenderError(f"Source not found: {source}")
+            raise RenderError(f"Source not found: {s}")
 
-    # --- Extract frontmatter -------------------------------------------------
-    frontmatter, body = _extract_frontmatter(markdown)
+        # --- Extract frontmatter ---------------------------------------------
+        fm, body = _extract_frontmatter(markdown)
+        
+        # Merge frontmatter: first one wins for top-level keys, 
+        # but 'will' sub-sections are deeply merged where it makes sense.
+        for k, v in fm.items():
+            if k == "will":
+                if "will" not in all_frontmatter:
+                    all_frontmatter["will"] = {}
+                # Merge 'data' and 'variables'
+                for subkey in ("data", "variables"):
+                    if subkey in v:
+                        if subkey not in all_frontmatter["will"]:
+                            all_frontmatter["will"][subkey] = {}
+                        all_frontmatter["will"][subkey].update(v[subkey])
+                # Other will keys (template, page_size, etc.) - first one wins
+                for subkey in v:
+                    if subkey not in ("data", "variables") and subkey not in all_frontmatter["will"]:
+                        all_frontmatter["will"][subkey] = v[subkey]
+            elif k not in all_frontmatter:
+                all_frontmatter[k] = v
+        
+        body_parts.append(body)
+
+    # Combine bodies
+    body = "\n\n".join(body_parts)
+    frontmatter = all_frontmatter
+
+    # --- Load external data --------------------------------------------------
+    will_meta = frontmatter.get("will", {}) or {}
+    data_spec = will_meta.get("data", {}) or {}
+    
+    try:
+        loaded_data = load_data_map(data_spec, base_dir=first_file_dir)
+    except DataLoaderError as exc:
+        raise RenderError(f"Data loading failed: {exc}") from exc
 
     # --- Merge variables -----------------------------------------------------
-    will_meta = frontmatter.get("will", {}) or {}
     fm_vars = will_meta.get("variables", {}) or {}
-    merged_vars = {**fm_vars, **variables}
+    merged_vars = {**fm_vars, **loaded_data, **variables}
 
     # --- Preprocess ----------------------------------------------------------
     body = preprocess(body, merged_vars)
@@ -112,12 +164,14 @@ def render(
                 output_path=output,
                 output_format=format,
                 reference_doc=reference_doc,
+                extra_args=extra_args,
             )
         else:
             return pandoc_convert_to_bytes(
                 final_md,
                 output_format=format,
                 reference_doc=reference_doc,
+                extra_args=extra_args,
             )
     except Exception as exc:
         raise RenderError(f"Render failed: {exc}") from exc
@@ -133,6 +187,10 @@ def _extract_frontmatter(markdown: str) -> tuple[dict, str]:
     Returns:
         ``(frontmatter_dict, body_string)``
     """
+    # Strip UTF-8 BOM if present (common in files created on Windows)
+    if markdown.startswith("\ufeff"):
+        markdown = markdown[1:]
+
     match = _FRONTMATTER_RE.match(markdown)
     if not match:
         return {}, markdown

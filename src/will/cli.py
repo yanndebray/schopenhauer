@@ -80,8 +80,8 @@ def main(ctx, version):
 # =============================================================================
 
 
-@main.command()
-@click.argument("input_file", type=click.Path(exists=True))
+@main.command(context_settings=dict(ignore_unknown_options=True))
+@click.argument("input_files", nargs=-1, required=True)
 @click.option("--output", "-o", required=True, help="Output file path")
 @click.option(
     "--format",
@@ -100,8 +100,10 @@ def main(ctx, version):
     default="pandoc",
     help="Rendering backend (default: pandoc)",
 )
+@click.pass_context
 def render(
-    input_file: str,
+    ctx: click.Context,
+    input_files: tuple,
     output: str,
     formats: tuple,
     template: Optional[str],
@@ -109,18 +111,18 @@ def render(
     backend: str,
 ):
     """
-    Render a Markdown or YAML/JSON spec to one or more output formats.
+    Render one or more Markdown or YAML/JSON specs to output formats.
 
-    This is the primary document generation command (v0.2+).
+    Multiple input files are concatenated into a single document.
+    Arguments after '--' are passed directly to Pandoc.
 
     \b
     Examples:
         will render report.md -o report.docx
+        will render chapters/*.md -o book.docx
+        will render report.md -o report.docx -- --toc --number-sections
         will render report.md -o report.pdf -f pdf
-        will render report.md -o outputs/report -f docx -f pdf -f html
         will render spec.yaml -o report.docx --backend legacy
-        will render report.md -o report.docx -V COMPANY="Acme" -V YEAR=2024
-        will render report.md -o report.docx -t report
     """
     from will.render import render as do_render
 
@@ -131,8 +133,32 @@ def render(
             key, value = v.split("=", 1)
             variables[key] = value
 
+    # Separate input files from extra args (Pandoc pass-through)
+    # Click's nargs=-1 is greedy, so we manually split if '--' or flags are present.
+    source_items = []
+    extra_args = list(ctx.args)
+    
+    found_separator = False
+    for i, item in enumerate(input_files):
+        if item == "--":
+            extra_args.extend(input_files[i+1:])
+            found_separator = True
+            break
+        
+        # If it looks like a flag and we haven't seen -- yet, it's an extra arg
+        if item.startswith("-") and not Path(item).exists():
+            extra_args.append(item)
+            extra_args.extend(input_files[i+1:])
+            found_separator = True
+            break
+            
+        source_items.append(item)
+
     try:
         output_path = Path(output)
+        
+        # Convert source_items to list or single string for render()
+        source = source_items if len(source_items) > 1 else source_items[0]
 
         if formats:
             # Multi-format: generate one file per format
@@ -142,27 +168,49 @@ def render(
                 else:
                     out = output_path
                 do_render(
-                    source=input_file,
+                    source=source,
                     output=str(out),
                     format=fmt,
                     template=template,
                     variables=variables,
                     backend=backend,
+                    extra_args=extra_args,
                 )
                 click.echo(click.style(f"  Rendered: {out}", fg="green"))
         else:
             # Single format (inferred from extension)
             do_render(
-                source=input_file,
+                source=source,
                 output=str(output_path),
                 template=template,
                 variables=variables,
                 backend=backend,
+                extra_args=extra_args,
             )
             click.echo(click.style(f"  Rendered: {output_path}", fg="green"))
 
     except Exception as e:
         click.echo(click.style(f"Error rendering document: {e}", fg="red"), err=True)
+        sys.exit(1)
+
+
+@main.command()
+@click.option("--port", default=8000, help="Port for HTTP transport (if used)")
+def mcp(port: int):
+    """
+    Start the Schopenhauer MCP server.
+
+    This allows AI agents to use Schopenhauer as a tool.
+    """
+    try:
+        from will.mcp import mcp as mcp_server
+        console.print("[bold green]Starting Schopenhauer MCP server...[/bold green]")
+        mcp_server.run()
+    except ImportError:
+        console.print("[red]Error: 'fastmcp' not installed. Install with 'pip install fastmcp'[/red]")
+        sys.exit(1)
+    except Exception as e:
+        console.print(f"[red]Error starting MCP server:[/red] {e}")
         sys.exit(1)
 
 
@@ -754,6 +802,52 @@ def template_init(name: str, output: str):
     console.print(f"[green]Created YAML spec:[/green] {output}")
     console.print("\nEdit this file and run:")
     console.print(f"  will generate {output} -o document.docx")
+
+
+@template.command("inspect")
+@click.argument("template_path", type=click.Path(exists=True))
+def template_inspect(template_path: str):
+    """
+    Inspect a .docx template's styles and fonts.
+
+    This helps debug styling issues in Pandoc reference documents.
+    """
+    try:
+        from docx import Document
+        doc = Document(template_path)
+
+        console.print(Panel(f"[bold]Template Styles: {template_path}[/bold]"))
+
+        table = Table(show_header=True, header_style="bold")
+        table.add_column("Style Name")
+        table.add_column("Font Family")
+        table.add_column("Size (pt)")
+        table.add_column("Base Style")
+
+        # Key styles that Pandoc uses
+        key_styles = [
+            "Normal", "Body Text", "First Paragraph", "Compact",
+            "Title", "Subtitle", "Heading 1", "Heading 2", "Heading 3",
+            "Caption", "Quote", "Source Code"
+        ]
+
+        for name in key_styles:
+            try:
+                style = doc.styles[name]
+                font = style.font
+                size = f"{font.size.pt:.1f}" if font.size else "inherit"
+                family = font.name or "inherit"
+                base = style.base_style.name if style.base_style else "-"
+                
+                table.add_row(name, family, size, base)
+            except KeyError:
+                continue
+
+        console.print(table)
+
+    except Exception as e:
+        console.print(f"[red]Error inspecting template:[/red] {e}")
+        sys.exit(1)
 
 
 # =============================================================================

@@ -50,6 +50,10 @@ def compile_spec(spec: dict) -> str:
     if spec.get("template"):
         will_meta["template"] = spec["template"]
 
+    # Support 'will' section in legacy spec for advanced features (data binding, etc.)
+    if "will" in spec and isinstance(spec["will"], dict):
+        will_meta.update(spec["will"])
+
     if will_meta:
         fm["will"] = will_meta
 

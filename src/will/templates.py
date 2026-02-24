@@ -244,12 +244,13 @@ def get_template(name: str) -> Optional[TemplateConfig]:
 
 def list_templates() -> list[dict[str, str]]:
     """
-    List all available built-in templates.
+    List all available built-in templates and reference docs.
 
     Returns:
         List of template info dictionaries.
     """
-    return [
+    # Start with built-in configurations
+    templates = [
         {
             "name": config.name,
             "description": config.description,
@@ -257,6 +258,21 @@ def list_templates() -> list[dict[str, str]]:
         }
         for config in BUILTIN_TEMPLATES.values()
     ]
+    
+    # Add reference docs that don't overlap with built-ins
+    ref_dir = Path(__file__).resolve().parent.parent.parent / "templates" / "reference-docs"
+    if ref_dir.is_dir():
+        builtin_names = {t["name"] for t in templates}
+        for path in ref_dir.glob("*.docx"):
+            name = path.stem
+            if name not in builtin_names:
+                templates.append({
+                    "name": name,
+                    "description": "Word reference document (Pandoc template)",
+                    "page_size": "unknown (from docx)",
+                })
+    
+    return sorted(templates, key=lambda x: x["name"])
 
 
 def get_template_names() -> list[str]:
