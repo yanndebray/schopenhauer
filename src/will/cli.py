@@ -76,6 +76,97 @@ def main(ctx, version):
 
 
 # =============================================================================
+# RENDER COMMAND (v0.2+ primary command)
+# =============================================================================
+
+
+@main.command()
+@click.argument("input_file", type=click.Path(exists=True))
+@click.option("--output", "-o", required=True, help="Output file path")
+@click.option(
+    "--format",
+    "-f",
+    "formats",
+    multiple=True,
+    help="Output format(s): docx, pdf, html, pptx, epub, latex. "
+    "Can be specified multiple times for multi-format output. "
+    "Inferred from output extension if not given.",
+)
+@click.option("--template", "-t", help="Template name or path to .docx reference doc")
+@click.option("--var", "-V", multiple=True, help="Variable substitution (KEY=VALUE)")
+@click.option(
+    "--backend",
+    type=click.Choice(["pandoc", "legacy"]),
+    default="pandoc",
+    help="Rendering backend (default: pandoc)",
+)
+def render(
+    input_file: str,
+    output: str,
+    formats: tuple,
+    template: Optional[str],
+    var: tuple,
+    backend: str,
+):
+    """
+    Render a Markdown or YAML/JSON spec to one or more output formats.
+
+    This is the primary document generation command (v0.2+).
+
+    \b
+    Examples:
+        will render report.md -o report.docx
+        will render report.md -o report.pdf -f pdf
+        will render report.md -o outputs/report -f docx -f pdf -f html
+        will render spec.yaml -o report.docx --backend legacy
+        will render report.md -o report.docx -V COMPANY="Acme" -V YEAR=2024
+        will render report.md -o report.docx -t report
+    """
+    from will.render import render as do_render
+
+    # Parse variables
+    variables = {}
+    for v in var:
+        if "=" in v:
+            key, value = v.split("=", 1)
+            variables[key] = value
+
+    try:
+        output_path = Path(output)
+
+        if formats:
+            # Multi-format: generate one file per format
+            for fmt in formats:
+                if len(formats) > 1:
+                    out = output_path.parent / f"{output_path.stem}.{fmt}"
+                else:
+                    out = output_path
+                do_render(
+                    source=input_file,
+                    output=str(out),
+                    format=fmt,
+                    template=template,
+                    variables=variables,
+                    backend=backend,
+                )
+                click.echo(click.style(f"  Rendered: {out}", fg="green"))
+        else:
+            # Single format (inferred from extension)
+            do_render(
+                source=input_file,
+                output=str(output_path),
+                template=template,
+                variables=variables,
+                backend=backend,
+            )
+            click.echo(click.style(f"  Rendered: {output_path}", fg="green"))
+
+    except Exception as e:
+        click.echo(click.style(f"Error rendering document: {e}", fg="red"), err=True)
+        sys.exit(1)
+
+
+# =============================================================================
 # CREATE COMMAND
 # =============================================================================
 
