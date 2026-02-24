@@ -25,9 +25,9 @@ CLI Usage:
 __version__ = "0.2.0"
 __author__ = "Schopenhauer Contributors"
 
-from will.render import render
 from will.core import WordDocument
 from will.document import DocumentBuilder
+from will.render import render
 from will.styles import (
     BRAND,
     COLORS,
